@@ -24,3 +24,21 @@ export function parseJsonBody(event: CommonEvent): Record<string, unknown> {
     throw new BadRequestError("Request body must be a valid JSON object");
   }
 }
+
+// Shared by every list endpoint: ?page=1&limit=10 (limit at most 50). Bad values -> 400.
+export function parsePositiveInt(raw: string | undefined, fallback: number, name: string, max?: number): number {
+  if (raw === undefined || raw === "") return fallback;
+  const value = Number(raw);
+  if (!Number.isInteger(value) || value < 1 || (max !== undefined && value > max)) {
+    throw new BadRequestError(`${name} must be a whole number from 1${max ? ` to ${max}` : ""}`);
+  }
+  return value;
+}
+
+export function parsePaging(event: CommonEvent): { page: number; limit: number } {
+  const query = event.queryStringParameters ?? {};
+  return {
+    page: parsePositiveInt(query.page, 1, "page"),
+    limit: parsePositiveInt(query.limit, 10, "limit", 50),
+  };
+}

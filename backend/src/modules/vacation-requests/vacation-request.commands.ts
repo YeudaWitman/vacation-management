@@ -7,3 +7,14 @@ export class CreateVacationRequestCommand {
     public readonly reason: string | null
   ) {}
 }
+
+export class ApproveVacationRequestCommand {
+  constructor(public readonly requestId: number) {}
+}
+
+export class RejectVacationRequestCommand {
+  constructor(
+    public readonly requestId: number,
+    public readonly comment: string
+  ) {}
+}

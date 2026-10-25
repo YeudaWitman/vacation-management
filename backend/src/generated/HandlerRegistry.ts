@@ -4,6 +4,7 @@ import { registerHandlerRefs } from "commoneventframework";
 
 import * as __cef_modules_auth_auth_handlers from "../modules/auth/auth.handlers";
 import * as __cef_modules_vacation_requests_vacation_request_handlers from "../modules/vacation-requests/vacation-request.handlers";
+import * as __cef_modules_vacation_requests_vacation_request_validator_handlers from "../modules/vacation-requests/vacation-request.validator.handlers";
 
 export class HandlerRegistry {
 	static register(): void {
@@ -16,6 +17,12 @@ export class HandlerRegistry {
 			"modules/vacation-requests/vacation-request.handlers#listMine": __cef_modules_vacation_requests_vacation_request_handlers.listMine,
 			"modules/vacation-requests/vacation-request.handlers#parseCreate": __cef_modules_vacation_requests_vacation_request_handlers.parseCreate,
 			"modules/vacation-requests/vacation-request.handlers#parseListMine": __cef_modules_vacation_requests_vacation_request_handlers.parseListMine,
+			"modules/vacation-requests/vacation-request.validator.handlers#approve": __cef_modules_vacation_requests_vacation_request_validator_handlers.approve,
+			"modules/vacation-requests/vacation-request.validator.handlers#listAll": __cef_modules_vacation_requests_vacation_request_validator_handlers.listAll,
+			"modules/vacation-requests/vacation-request.validator.handlers#parseApprove": __cef_modules_vacation_requests_vacation_request_validator_handlers.parseApprove,
+			"modules/vacation-requests/vacation-request.validator.handlers#parseListAll": __cef_modules_vacation_requests_vacation_request_validator_handlers.parseListAll,
+			"modules/vacation-requests/vacation-request.validator.handlers#parseReject": __cef_modules_vacation_requests_vacation_request_validator_handlers.parseReject,
+			"modules/vacation-requests/vacation-request.validator.handlers#reject": __cef_modules_vacation_requests_vacation_request_validator_handlers.reject,
 		});
 	}
 }

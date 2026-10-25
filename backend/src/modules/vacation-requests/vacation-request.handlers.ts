@@ -1,8 +1,7 @@
 import { Response } from "commoneventframework";
-import { CommonEvent } from "commoneventframework/dist/types/commonEvent";
 import { HandlerFn, InputParserFn } from "../../shared/types";
 import { BadRequestError } from "../../shared/errors";
-import { parseJsonBody } from "../../shared/http";
+import { parseJsonBody, parsePaging } from "../../shared/http";
 import { authenticate, AuthUser } from "../../shared/auth";
 import { isValidIsoDate } from "../../shared/dates";
 import { commandBus } from "../../shared/bus";
@@ -47,23 +46,6 @@ interface ListMineInput {
   user: AuthUser;
   page: number;
   limit: number;
-}
-
-export function parsePositiveInt(raw: string | undefined, fallback: number, name: string, max?: number): number {
-  if (raw === undefined || raw === "") return fallback;
-  const value = Number(raw);
-  if (!Number.isInteger(value) || value < 1 || (max !== undefined && value > max)) {
-    throw new BadRequestError(`${name} must be a whole number from 1${max ? ` to ${max}` : ""}`);
-  }
-  return value;
-}
-
-export function parsePaging(event: CommonEvent): { page: number; limit: number } {
-  const query = event.queryStringParameters ?? {};
-  return {
-    page: parsePositiveInt(query.page, 1, "page"),
-    limit: parsePositiveInt(query.limit, 10, "limit", 50),
-  };
 }
 
 export const parseListMine: InputParserFn = (event): ListMineInput => ({

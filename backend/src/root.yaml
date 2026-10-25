@@ -72,6 +72,41 @@ paths:
         '409':
           description: Overlaps another of your requests
 
+    get:
+      x-handler: modules/vacation-requests/vacation-request.validator.handlers#listAll
+      x-inputParser: modules/vacation-requests/vacation-request.validator.handlers#parseListAll
+      summary: Validator lists everyone's requests, with filters and pagination
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [Pending, Approved, Rejected]
+        - in: query
+          name: userId
+          schema:
+            type: integer
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+            maximum: 50
+      responses:
+        '200':
+          description: "{ items, total, page, limit }, each item includes the requester"
+        '400':
+          description: Invalid filter, page or limit
+        '401':
+          description: Missing or invalid token
+        '403':
+          description: Not a Validator
+
   /vacation-requests/mine:
     get:
       x-handler: modules/vacation-requests/vacation-request.handlers#listMine
@@ -98,3 +133,51 @@ paths:
           description: Missing or invalid token
         '403':
           description: Not a Requester
+
+  /vacation-requests/:id/approve:
+    patch:
+      x-handler: modules/vacation-requests/vacation-request.validator.handlers#approve
+      x-inputParser: modules/vacation-requests/vacation-request.validator.handlers#parseApprove
+      summary: Validator approves a Pending request
+      responses:
+        '200':
+          description: The approved request
+        '400':
+          description: Invalid id
+        '401':
+          description: Missing or invalid token
+        '403':
+          description: Not a Validator
+        '404':
+          description: Request not found
+        '409':
+          description: Request is not Pending
+
+  /vacation-requests/:id/reject:
+    patch:
+      x-handler: modules/vacation-requests/vacation-request.validator.handlers#reject
+      x-inputParser: modules/vacation-requests/vacation-request.validator.handlers#parseReject
+      summary: Validator rejects a Pending request with a comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [comment]
+              properties:
+                comment:
+                  type: string
+      responses:
+        '200':
+          description: The rejected request
+        '400':
+          description: Invalid id, or empty comment
+        '401':
+          description: Missing or invalid token
+        '403':
+          description: Not a Validator
+        '404':
+          description: Request not found
+        '409':
+          description: Request is not Pending

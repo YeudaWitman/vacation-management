@@ -7,3 +7,18 @@ export class VacationRequestCreatedEvent {
     public readonly endDate: string
   ) {}
 }
+
+export class VacationRequestApprovedEvent {
+  constructor(
+    public readonly requestId: number,
+    public readonly userId: number
+  ) {}
+}
+
+export class VacationRequestRejectedEvent {
+  constructor(
+    public readonly requestId: number,
+    public readonly userId: number,
+    public readonly comment: string
+  ) {}
+}
