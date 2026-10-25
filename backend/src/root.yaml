@@ -38,3 +38,63 @@ paths:
           description: Current user
         '401':
           description: Missing or invalid token
+
+  /vacation-requests:
+    post:
+      x-handler: modules/vacation-requests/vacation-request.handlers#createRequest
+      x-inputParser: modules/vacation-requests/vacation-request.handlers#parseCreate
+      summary: Requester submits a vacation request (starts as Pending)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [startDate, endDate]
+              properties:
+                startDate:
+                  type: string
+                  example: '2026-12-20'
+                endDate:
+                  type: string
+                  example: '2026-12-24'
+                reason:
+                  type: string
+      responses:
+        '201':
+          description: The created request
+        '400':
+          description: Invalid input, end before start, or start in the past
+        '401':
+          description: Missing or invalid token
+        '403':
+          description: Not a Requester
+        '409':
+          description: Overlaps another of your requests
+
+  /vacation-requests/mine:
+    get:
+      x-handler: modules/vacation-requests/vacation-request.handlers#listMine
+      x-inputParser: modules/vacation-requests/vacation-request.handlers#parseListMine
+      summary: Requester lists their own requests, newest first
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+            maximum: 50
+      responses:
+        '200':
+          description: "{ items, total, page, limit }"
+        '400':
+          description: Invalid page or limit
+        '401':
+          description: Missing or invalid token
+        '403':
+          description: Not a Requester

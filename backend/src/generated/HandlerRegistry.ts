@@ -3,6 +3,7 @@
 import { registerHandlerRefs } from "commoneventframework";
 
 import * as __cef_modules_auth_auth_handlers from "../modules/auth/auth.handlers";
+import * as __cef_modules_vacation_requests_vacation_request_handlers from "../modules/vacation-requests/vacation-request.handlers";
 
 export class HandlerRegistry {
 	static register(): void {
@@ -11,6 +12,10 @@ export class HandlerRegistry {
 			"modules/auth/auth.handlers#login": __cef_modules_auth_auth_handlers.login,
 			"modules/auth/auth.handlers#parseLogin": __cef_modules_auth_auth_handlers.parseLogin,
 			"modules/auth/auth.handlers#parseMe": __cef_modules_auth_auth_handlers.parseMe,
+			"modules/vacation-requests/vacation-request.handlers#createRequest": __cef_modules_vacation_requests_vacation_request_handlers.createRequest,
+			"modules/vacation-requests/vacation-request.handlers#listMine": __cef_modules_vacation_requests_vacation_request_handlers.listMine,
+			"modules/vacation-requests/vacation-request.handlers#parseCreate": __cef_modules_vacation_requests_vacation_request_handlers.parseCreate,
+			"modules/vacation-requests/vacation-request.handlers#parseListMine": __cef_modules_vacation_requests_vacation_request_handlers.parseListMine,
 		});
 	}
 }
