@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: vacation-db
+    environment:
+      POSTGRES_USER: vacation
+      POSTGRES_PASSWORD: vacation
+      POSTGRES_DB: vacation
+    ports:
+      - "5432:5432"
+    volumes:
+      - vacation_pgdata:/var/lib/postgresql/data
+
+volumes:
+  vacation_pgdata:
