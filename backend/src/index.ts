@@ -3,6 +3,7 @@ import { loadEnv } from "commoneventframework";
 const envReady = loadEnv();
 
 import "./generated/HandlerRegistry";
+import "./bootstrap";
 
 import {
 	APIGatewayProxyStructuredResultV2,
