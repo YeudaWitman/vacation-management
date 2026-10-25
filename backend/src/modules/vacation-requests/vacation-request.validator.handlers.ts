@@ -1,7 +1,7 @@
 import { CommonEvent } from "commoneventframework/dist/types/commonEvent";
 import { HandlerFn, InputParserFn } from "../../shared/types";
 import { BadRequestError } from "../../shared/errors";
-import { parseJsonBody, parsePaging, parsePositiveInt } from "../../shared/http";
+import { MAX_ID, parseJsonBody, parsePaging, parsePositiveInt } from "../../shared/http";
 import { authenticate } from "../../shared/auth";
 import { commandBus } from "../../shared/bus";
 import {
@@ -17,8 +17,8 @@ import { RequestStatus, VacationRequest } from "./vacation-request.entity";
 const STATUSES: RequestStatus[] = ["Pending", "Approved", "Rejected"];
 
 function parseRequestId(event: CommonEvent): number {
-  const id = parsePositiveInt(event.pathParameters?.id, 0, "id");
-  if (!id) throw new BadRequestError("id must be a whole number from 1");
+  const id = parsePositiveInt(event.pathParameters?.id, 0, "id", MAX_ID);
+  if (!id) throw new BadRequestError(`id must be a whole number from 1 to ${MAX_ID}`);
   return id;
 }
 
@@ -41,7 +41,7 @@ export const parseListAll: InputParserFn = (event: CommonEvent): ListAllInput =>
     filters.status = query.status as RequestStatus;
   }
   if (query.userId) {
-    filters.userId = parsePositiveInt(query.userId, 0, "userId");
+    filters.userId = parsePositiveInt(query.userId, 0, "userId", MAX_ID);
   }
   return { filters, ...parsePaging(event) };
 };

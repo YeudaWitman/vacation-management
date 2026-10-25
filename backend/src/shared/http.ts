@@ -25,6 +25,10 @@ export function parseJsonBody(event: CommonEvent): Record<string, unknown> {
   }
 }
 
+// The database id column is a 32-bit integer. A bigger number would make PostgreSQL fail
+// (a 500), so ids from the URL or the query string are limited to this value (a 400 instead).
+export const MAX_ID = 2147483647;
+
 // Shared by every list endpoint: ?page=1&limit=10 (limit at most 50). Bad values -> 400.
 export function parsePositiveInt(raw: string | undefined, fallback: number, name: string, max?: number): number {
   if (raw === undefined || raw === "") return fallback;

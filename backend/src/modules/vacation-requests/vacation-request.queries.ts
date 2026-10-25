@@ -47,3 +47,33 @@ export async function listAllRequests(
   });
   return { items, total, page, limit };
 }
+
+// One row of the team vacation plan. Deliberately small: no reason and no comments,
+// because colleagues should see who is away and when, not why.
+export interface TeamVacation {
+  id: number;
+  userId: number;
+  userName: string;
+  startDate: string;
+  endDate: string;
+}
+
+// Approved vacations of everyone, soonest first.
+export async function listTeamVacations(page: number, limit: number): Promise<Page<TeamVacation>> {
+  const repo = (await getDataSource()).getRepository(VacationRequest);
+  const [rows, total] = await repo.findAndCount({
+    where: { status: "Approved" },
+    relations: { user: true },
+    order: { startDate: "ASC", id: "ASC" },
+    skip: (page - 1) * limit,
+    take: limit,
+  });
+  const items = rows.map((r) => ({
+    id: r.id,
+    userId: r.userId,
+    userName: r.user.name,
+    startDate: r.startDate,
+    endDate: r.endDate,
+  }));
+  return { items, total, page, limit };
+}

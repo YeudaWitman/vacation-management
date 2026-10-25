@@ -181,3 +181,28 @@ paths:
           description: Request not found
         '409':
           description: Request is not Pending
+
+  /team/vacations:
+    get:
+      x-handler: modules/team/team.handlers#teamVacations
+      x-inputParser: modules/team/team.handlers#parseTeamVacations
+      summary: Team vacation plan, the approved vacations of everyone, soonest first
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+            maximum: 50
+      responses:
+        '200':
+          description: "{ items: [{ id, userId, userName, startDate, endDate }], total, page, limit }"
+        '400':
+          description: Invalid page or limit
+        '401':
+          description: Missing or invalid token
