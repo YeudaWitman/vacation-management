@@ -11,7 +11,11 @@ import {
   handleApproveVacationRequest,
   handleRejectVacationRequest,
 } from "./modules/vacation-requests/review-vacation-request.command-handlers";
+import { registerAuditLogListeners } from "./listeners/audit-log.listener";
 
 commandBus.register(CreateVacationRequestCommand, handleCreateVacationRequest);
 commandBus.register(ApproveVacationRequestCommand, handleApproveVacationRequest);
 commandBus.register(RejectVacationRequestCommand, handleRejectVacationRequest);
+
+// Event listeners: they react after a command succeeded. See listeners/audit-log.listener.ts.
+registerAuditLogListeners();
