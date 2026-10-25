@@ -25,6 +25,11 @@ export function usePagedList<T>(
     try {
       const result = await fetcher(toPage, limit);
       if (call !== latestCall) return;
+      // We asked for a page that no longer exists (for example the last row of the last page
+      // was just approved and left a filtered list). Go to the new last page instead.
+      if (!result.items.length && result.total > 0 && toPage > 1) {
+        return load(Math.ceil(result.total / limit));
+      }
       items.value = result.items;
       total.value = result.total;
       page.value = result.page;

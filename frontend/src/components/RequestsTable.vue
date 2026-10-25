@@ -3,7 +3,8 @@ import type { VacationRequest } from "../types";
 import StatusBadge from "./StatusBadge.vue";
 
 // Reused by the Requester screen and (later) the Validator dashboard:
-// showUser adds a "Requester" column, and the "actions" slot lets the parent add buttons.
+// showUser adds a "Requester" column (the "user" slot can replace the plain name), and the
+// "actions" slot lets the parent add buttons.
 defineProps<{ items: VacationRequest[]; showUser?: boolean }>();
 </script>
 
@@ -22,7 +23,9 @@ defineProps<{ items: VacationRequest[]; showUser?: boolean }>();
       </thead>
       <tbody>
         <tr v-for="request in items" :key="request.id" class="border-b border-gray-100 align-top">
-          <td v-if="showUser" class="py-2 pr-3">{{ request.user?.name ?? request.userId }}</td>
+          <td v-if="showUser" class="py-2 pr-3">
+            <slot name="user" :request="request">{{ request.user?.name ?? request.userId }}</slot>
+          </td>
           <td class="py-2 pr-3 whitespace-nowrap">{{ request.startDate }}</td>
           <td class="py-2 pr-3 whitespace-nowrap">{{ request.endDate }}</td>
           <td class="py-2 pr-3">{{ request.reason ?? "–" }}</td>
