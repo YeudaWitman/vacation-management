@@ -7,7 +7,8 @@
     "dev": "ts-node src/index.ts --local",
     "build": "cef-build",
     "build:full": "cef-build --full",
-    "seed": "ts-node src/shared/db/seed.ts"
+    "seed": "ts-node src/shared/db/seed.ts",
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +27,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
   }
 }
