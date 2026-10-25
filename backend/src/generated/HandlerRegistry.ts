@@ -4,6 +4,7 @@ import { registerHandlerRefs } from "commoneventframework";
 
 import * as __cef_modules_auth_auth_handlers from "../modules/auth/auth.handlers";
 import * as __cef_modules_team_team_handlers from "../modules/team/team.handlers";
+import * as __cef_modules_users_user_handlers from "../modules/users/user.handlers";
 import * as __cef_modules_vacation_requests_vacation_request_handlers from "../modules/vacation-requests/vacation-request.handlers";
 import * as __cef_modules_vacation_requests_vacation_request_validator_handlers from "../modules/vacation-requests/vacation-request.validator.handlers";
 
@@ -16,6 +17,8 @@ export class HandlerRegistry {
 			"modules/auth/auth.handlers#parseMe": __cef_modules_auth_auth_handlers.parseMe,
 			"modules/team/team.handlers#parseTeamVacations": __cef_modules_team_team_handlers.parseTeamVacations,
 			"modules/team/team.handlers#teamVacations": __cef_modules_team_team_handlers.teamVacations,
+			"modules/users/user.handlers#listUsers": __cef_modules_users_user_handlers.listUsers,
+			"modules/users/user.handlers#parseListUsers": __cef_modules_users_user_handlers.parseListUsers,
 			"modules/vacation-requests/vacation-request.handlers#createRequest": __cef_modules_vacation_requests_vacation_request_handlers.createRequest,
 			"modules/vacation-requests/vacation-request.handlers#listMine": __cef_modules_vacation_requests_vacation_request_handlers.listMine,
 			"modules/vacation-requests/vacation-request.handlers#parseCreate": __cef_modules_vacation_requests_vacation_request_handlers.parseCreate,

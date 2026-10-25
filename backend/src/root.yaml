@@ -206,3 +206,16 @@ paths:
           description: Invalid page or limit
         '401':
           description: Missing or invalid token
+
+  /users:
+    get:
+      x-handler: modules/users/user.handlers#listUsers
+      x-inputParser: modules/users/user.handlers#parseListUsers
+      summary: Validator lists the Requesters (id and name) for the dashboard dropdown
+      responses:
+        '200':
+          description: "{ items: [{ id, name }] }, sorted by name"
+        '401':
+          description: Missing or invalid token
+        '403':
+          description: Not a Validator

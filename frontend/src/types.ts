@@ -29,3 +29,9 @@ export interface Page<T> {
   page: number;
   limit: number;
 }
+
+// One entry of the Validator's requester dropdown.
+export interface RequesterOption {
+  id: number;
+  name: string;
+}

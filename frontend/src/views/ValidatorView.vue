@@ -8,26 +8,34 @@ import RejectDialog from "../components/RejectDialog.vue";
 import { usePagedList } from "../composables/usePagedList";
 import { approveRequest, fetchAllRequests } from "../api/validator.api";
 import { fetchTeamVacations } from "../api/team.api";
+import { fetchRequesters } from "../api/users.api";
 import { errorMessage } from "../api/http";
-import type { RequestStatus, VacationRequest } from "../types";
+import type { RequestStatus, RequesterOption, VacationRequest } from "../types";
 
 // --- filters ---
 const statusFilter = ref<RequestStatus | "">("");
-const userFilter = ref<{ id: number; name: string } | null>(null);
+const userFilter = ref<number | "">(""); // the selected requester id, "" = everyone
+const requesters = ref<RequesterOption[]>([]);
 
 // The list asks for the current filters every time it loads.
 const all = usePagedList((page, limit) =>
   fetchAllRequests(
-    { status: statusFilter.value || undefined, userId: userFilter.value?.id },
+    { status: statusFilter.value || undefined, userId: userFilter.value || undefined },
     page,
     limit
   )
 );
 const team = usePagedList(fetchTeamVacations);
 
-onMounted(() => {
+onMounted(async () => {
   all.load(1);
   team.load(1);
+  // The dropdown is a convenience: if loading it fails, the list and the click-on-a-name filter still work.
+  try {
+    requesters.value = await fetchRequesters();
+  } catch {
+    requesters.value = [];
+  }
 });
 
 // Changing a filter always starts again from page 1.
@@ -36,13 +44,13 @@ function applyFilters() {
 }
 
 function filterByUser(request: VacationRequest) {
-  userFilter.value = { id: request.userId, name: request.user?.name ?? `User ${request.userId}` };
+  userFilter.value = request.userId;
   applyFilters();
 }
 
 function clearFilters() {
   statusFilter.value = "";
-  userFilter.value = null;
+  userFilter.value = "";
   applyFilters();
 }
 
@@ -100,20 +108,20 @@ async function onRejected() {
           </select>
         </div>
 
-        <span
-          v-if="userFilter"
-          class="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-800"
-        >
-          Requester: {{ userFilter.name }}
-          <button
-            type="button"
-            class="font-bold hover:text-blue-950"
-            aria-label="Remove the requester filter"
-            @click="userFilter = null; applyFilters()"
+        <div v-if="requesters.length">
+          <label class="mb-1 block text-sm font-medium" for="user-filter">Requester</label>
+          <select
+            id="user-filter"
+            v-model="userFilter"
+            class="rounded border border-gray-300 px-3 py-2"
+            @change="applyFilters"
           >
-            &times;
-          </button>
-        </span>
+            <option value="">Everyone</option>
+            <option v-for="requester in requesters" :key="requester.id" :value="requester.id">
+              {{ requester.name }}
+            </option>
+          </select>
+        </div>
 
         <button
           v-if="statusFilter || userFilter"
