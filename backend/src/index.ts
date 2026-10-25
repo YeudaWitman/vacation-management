@@ -15,7 +15,8 @@ import {
 	startDevServer
 } from "commoneventframework";
 import { CommonEvent, LambdaEvent } from "commoneventframework/dist/types/commonEvent";
-import { HandlerFn, InputParserFn } from "./handlers/types";
+import { HandlerFn, InputParserFn } from "./shared/types";
+import { HttpError } from "./shared/errors";
 
 export const handler = async (
 	event: LambdaEvent,
@@ -51,8 +52,12 @@ export const handler = async (
 		}
 		return new Response(200, result as object);
 	} catch (err) {
+		// Rule and validation failures carry their own status code (400, 401, 403, 404, 409).
+		if (err instanceof HttpError) {
+			return new Response(err.statusCode, { error: err.message });
+		}
 		console.error('handler error', err);
-		return new Response(500, err as object);
+		return new Response(500, { error: "Internal server error" });
 	}
 };
 

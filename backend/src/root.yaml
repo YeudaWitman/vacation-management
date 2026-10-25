@@ -1,29 +1,40 @@
 openapi: 3.0.3
 info:
-  title: My API
+  title: Vacation Management API
   version: 1.0.0
 paths:
-  /hello:
-    get:
-      x-handler: handlers/hello#getHello
-      summary: Returns a welcome message
+  /auth/login:
+    post:
+      x-handler: modules/auth/auth.handlers#login
+      x-inputParser: modules/auth/auth.handlers#parseLogin
+      summary: Log in with email and password, returns a JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
       responses:
         '200':
-          description: Success
-
-  /hello/:name:
-    get:
-      x-handler: handlers/hello#getHelloByName
-      x-inputParser: handlers/hello#parseHelloByNameInput
-      summary: Returns a personalized welcome message
-      parameters:
-        - in: path
-          name: name
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Success
+          description: Token and user
         '400':
-          description: Missing parameter
+          description: Missing email or password
+        '401':
+          description: Invalid email or password
+
+  /auth/me:
+    get:
+      x-handler: modules/auth/auth.handlers#getMe
+      x-inputParser: modules/auth/auth.handlers#parseMe
+      summary: Returns the logged-in user from the token
+      responses:
+        '200':
+          description: Current user
+        '401':
+          description: Missing or invalid token
